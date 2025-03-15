@@ -10,6 +10,17 @@ function saveQuotes() {
     localStorage.setItem("quotes", JSON.stringify(quotes));
 }
 
+// Function to show a random quote and store it in session storage
+function showRandomQuote() {
+    if (quotes.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    const selectedQuote = quotes[randomIndex];
+    document.getElementById("quoteDisplay").innerText = `"${selectedQuote.text}" - ${selectedQuote.category}`;
+    
+    // Save last displayed quote to session storage
+    sessionStorage.setItem("lastQuote", JSON.stringify(selectedQuote));
+}
+
 // Function to add a new quote to the array and update the DOM
 function addQuote() {
     const newQuoteText = document.getElementById("newQuoteText").value.trim();
@@ -41,9 +52,35 @@ function addQuote() {
     alert("Quote added successfully!");
 }
 
-// Load quotes from local storage on page load
+// Function to export quotes as a JSON file
+function exportToJsonFile() {
+    const dataStr = JSON.stringify(quotes, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "quotes.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+// Load quotes from local storage and restore last viewed quote from session storage on page load
 document.addEventListener("DOMContentLoaded", () => {
     if (quotes.length > 0) {
         console.log("Quotes loaded from local storage.");
     }
+    
+    // Retrieve last viewed quote from session storage
+    const lastQuote = sessionStorage.getItem("lastQuote");
+    if (lastQuote) {
+        const parsedQuote = JSON.parse(lastQuote);
+        document.getElementById("quoteDisplay").innerText = `"${parsedQuote.text}" - ${parsedQuote.category}`;
+    }
 });
+
+// Attach event listener to 'Show New Quote' button
+document.getElementById("newQuote").addEventListener("click", showRandomQuote);
+
+// Attach event listener to 'Export Quotes' button
+document.getElementById("exportQuotes").addEventListener("click", exportToJsonFile);
