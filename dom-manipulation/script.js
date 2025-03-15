@@ -21,7 +21,7 @@ function populateCategories() {
     categories.forEach(category => {
         const option = document.createElement("option");
         option.value = category;
-        option.innerText = category;
+        option.textContent = category;  // ✅ Replaced innerText with textContent
         categoryFilter.appendChild(option);
     });
 
@@ -43,7 +43,7 @@ function showRandomQuote() {
 
     const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
     const selectedQuote = filteredQuotes[randomIndex];
-    document.getElementById("quoteDisplay").innerText = `"${selectedQuote.text}" - ${selectedQuote.category}`;
+    document.getElementById("quoteDisplay").textContent = `"${selectedQuote.text}" - ${selectedQuote.category}`;  // ✅ Replaced innerText with textContent
 
     // Save last displayed quote to session storage
     sessionStorage.setItem("lastQuote", JSON.stringify(selectedQuote));
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const lastQuote = sessionStorage.getItem("lastQuote");
     if (lastQuote) {
         const parsedQuote = JSON.parse(lastQuote);
-        document.getElementById("quoteDisplay").innerText = `"${parsedQuote.text}" - ${parsedQuote.category}`;
+        document.getElementById("quoteDisplay").textContent = `"${parsedQuote.text}" - ${parsedQuote.category}`;  // ✅ Replaced innerText with textContent
     }
 });
 
