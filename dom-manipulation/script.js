@@ -65,18 +65,20 @@ function exportToJsonFile() {
     document.body.removeChild(a);
 }
 
-// Function to import quotes from a JSON file using file.text() instead of FileReader
+// Function to import quotes from a JSON file using FileReader, onload, and readAsText
 function importFromJsonFile(event) {
-    const file = event.target.files[0];
-    if (!file) {
-        alert("No file selected.");
-        return;
-    }
-    file.text().then((text) => {
+    // Create a new FileReader instance
+    const fileReader = new FileReader();
+    
+    // Define the onload event handler
+    fileReader.onload = function(event) {
         try {
-            const importedQuotes = JSON.parse(text);
+            // Parse the file contents (event.target.result) as JSON
+            const importedQuotes = JSON.parse(event.target.result);
             if (Array.isArray(importedQuotes)) {
+                // Add imported quotes to the quotes array
                 quotes.push(...importedQuotes);
+                // Save updated quotes to local storage
                 saveQuotes();
                 alert("Quotes imported successfully!");
                 showRandomQuote();
@@ -86,9 +88,10 @@ function importFromJsonFile(event) {
         } catch (error) {
             alert("Error parsing JSON file.");
         }
-    }).catch((error) => {
-        alert("Error reading file: " + error);
-    });
+    };
+    
+    // Read the file as text using readAsText
+    fileReader.readAsText(event.target.files[0]);
 }
 
 // Load quotes from local storage and restore last viewed quote from session storage on page load
