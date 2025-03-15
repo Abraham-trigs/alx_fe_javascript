@@ -15,7 +15,7 @@ function showRandomQuote() {
     if (quotes.length === 0) return;
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const selectedQuote = quotes[randomIndex];
-    document.getElementById("quoteDisplay").innerText = `"${selectedQuote.text}" - ${selectedQuote.category}`;
+    document.getElementById("quoteDisplay").innerText = `\"${selectedQuote.text}\" - ${selectedQuote.category}`;
     
     // Save last displayed quote to session storage
     sessionStorage.setItem("lastQuote", JSON.stringify(selectedQuote));
@@ -65,6 +65,32 @@ function exportToJsonFile() {
     document.body.removeChild(a);
 }
 
+// Function to import quotes from a JSON file using file.text() instead of FileReader
+function importFromJsonFile(event) {
+    const file = event.target.files[0];
+    if (!file) {
+        alert("No file selected.");
+        return;
+    }
+    file.text().then((text) => {
+        try {
+            const importedQuotes = JSON.parse(text);
+            if (Array.isArray(importedQuotes)) {
+                quotes.push(...importedQuotes);
+                saveQuotes();
+                alert("Quotes imported successfully!");
+                showRandomQuote();
+            } else {
+                alert("Invalid file format. Expected an array of quotes.");
+            }
+        } catch (error) {
+            alert("Error parsing JSON file.");
+        }
+    }).catch((error) => {
+        alert("Error reading file: " + error);
+    });
+}
+
 // Load quotes from local storage and restore last viewed quote from session storage on page load
 document.addEventListener("DOMContentLoaded", () => {
     if (quotes.length > 0) {
@@ -75,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const lastQuote = sessionStorage.getItem("lastQuote");
     if (lastQuote) {
         const parsedQuote = JSON.parse(lastQuote);
-        document.getElementById("quoteDisplay").innerText = `"${parsedQuote.text}" - ${parsedQuote.category}`;
+        document.getElementById("quoteDisplay").innerText = `\"${parsedQuote.text}\" - ${parsedQuote.category}`;
     }
 });
 
