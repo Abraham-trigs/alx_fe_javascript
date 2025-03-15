@@ -1,8 +1,8 @@
 // Array to store quotes along with their categories (loaded from local storage if available)
 let quotes = JSON.parse(localStorage.getItem("quotes")) || [
-    { text: "Talk is cheap. Show me the code.", category: "Programming" },
+    { text: "Abraham is maturing in Java.", category: "Programming" },
     { text: "First, solve the problem. Then, write the code.", category: "Software Development" },
-    { text: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.", category: "Best Practices" }
+    { text: "He is a Good programmer.", category: "Best Practices" }
 ];
 
 // Function to save quotes to local storage
