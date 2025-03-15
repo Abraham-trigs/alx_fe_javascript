@@ -8,6 +8,12 @@ const quotes = [
 // Function to display a random quote
 function showRandomQuote() {
     const quoteDisplay = document.getElementById("quoteDisplay");
+    
+    if (quotes.length === 0) {
+        quoteDisplay.innerHTML = "<p>No quotes available. Please add some!</p>";
+        return;
+    }
+    
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const randomQuote = quotes[randomIndex];
     
@@ -23,6 +29,13 @@ function addQuote() {
     // Validate input fields
     if (newQuoteText === "" || newQuoteCategory === "") {
         alert("Please enter both a quote and a category.");
+        return;
+    }
+    
+    // Check for duplicate quotes
+    const isDuplicate = quotes.some(quote => quote.text.toLowerCase() === newQuoteText.toLowerCase());
+    if (isDuplicate) {
+        alert("This quote already exists!");
         return;
     }
 
