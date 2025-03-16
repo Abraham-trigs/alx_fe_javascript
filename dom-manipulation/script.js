@@ -12,6 +12,12 @@ function saveQuotes() {
     localStorage.setItem("quotes", JSON.stringify(quotes));
 }
 
+// Function to sync quotes between local storage and server
+async function syncQuotes() {
+    await fetchQuotesFromServer();
+    saveQuotes();
+}
+
 // Function to fetch quotes from the mock server and handle conflicts
 async function fetchQuotesFromServer() {
     try {
@@ -157,7 +163,7 @@ function filterQuotes() {
 // Load quotes and restore last viewed quote on page load
 document.addEventListener("DOMContentLoaded", () => {
     populateCategories();
-    fetchQuotesFromServer();
+    syncQuotes();
     
     const lastQuote = sessionStorage.getItem("lastQuote");
     if (lastQuote) {
@@ -166,8 +172,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Periodically fetch server updates every 30 seconds
-setInterval(fetchQuotesFromServer, 30000);
+// Periodically sync quotes every 30 seconds
+setInterval(syncQuotes, 30000);
 
 // Attach event listeners
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
