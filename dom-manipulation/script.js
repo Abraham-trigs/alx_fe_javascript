@@ -39,6 +39,23 @@ async function fetchQuotesFromServer() {
     }
 }
 
+// Function to post a new quote to the server
+async function postQuoteToServer(quote) {
+    try {
+        const response = await fetch(SERVER_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(quote)
+        });
+        const result = await response.json();
+        console.log("Quote successfully posted to server:", result);
+    } catch (error) {
+        console.error("Error posting quote to server:", error);
+    }
+}
+
 // Function to show UI notification
 function showNotification(message) {
     const notification = document.createElement("div");
@@ -113,12 +130,16 @@ function addQuote() {
         return;
     }
 
-    // Add new quote
-    quotes.push({ text: newQuoteText, category: newQuoteCategory });
-
+    // Create new quote object
+    const newQuote = { text: newQuoteText, category: newQuoteCategory };
+    quotes.push(newQuote);
+    
     // Save and update categories
     saveQuotes();
     populateCategories();
+
+    // Post new quote to server
+    postQuoteToServer(newQuote);
 
     // Clear input fields
     document.getElementById("newQuoteText").value = "";
