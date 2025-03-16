@@ -12,7 +12,7 @@ function saveQuotes() {
     localStorage.setItem("quotes", JSON.stringify(quotes));
 }
 
-// Function to fetch quotes from the mock server
+// Function to fetch quotes from the mock server and handle conflicts
 async function fetchQuotesFromServer() {
     try {
         const response = await fetch(SERVER_URL);
@@ -24,10 +24,37 @@ async function fetchQuotesFromServer() {
             category: "General" // Default category for mock data
         }));
 
-        console.log("Fetched quotes from server:", formattedQuotes);
+        // Merge server quotes with local quotes, ensuring no duplicates
+        formattedQuotes.forEach(serverQuote => {
+            if (!quotes.some(localQuote => localQuote.text === serverQuote.text)) {
+                quotes.push(serverQuote);
+            }
+        });
+
+        saveQuotes();
+        console.log("Merged quotes from server:", quotes);
+        showNotification("New quotes added from server!");
     } catch (error) {
         console.error("Error fetching quotes from server:", error);
     }
+}
+
+// Function to show UI notification
+function showNotification(message) {
+    const notification = document.createElement("div");
+    notification.textContent = message;
+    notification.style.position = "fixed";
+    notification.style.top = "10px";
+    notification.style.right = "10px";
+    notification.style.background = "#28a745";
+    notification.style.color = "white";
+    notification.style.padding = "10px";
+    notification.style.borderRadius = "5px";
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        document.body.removeChild(notification);
+    }, 3000);
 }
 
 // Function to populate categories dynamically
