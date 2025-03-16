@@ -16,6 +16,7 @@ function saveQuotes() {
 async function syncQuotes() {
     await fetchQuotesFromServer();
     saveQuotes();
+    console.log("Quotes synced with server!");
 }
 
 // Function to fetch quotes from the mock server and handle conflicts
